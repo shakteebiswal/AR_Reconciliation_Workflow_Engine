@@ -79,5 +79,18 @@ Pyngrok
 #### Data Handling:
 Pandas
 
+## Production-Grade Evolution: Temporal.io Implementation
+For a true production-scale environment (handling millions of records with long-running retries), one approach would be to migrate from a manual Saga Pattern to Temporal. The current implementation in this repository uses a **Custom Saga Orchestrator** to demonstrate the underlying mechanics of state persistence and idempotent execution without the overhead of external infrastructure. However, the modular design of the activity_* functions ensures the codebase is **"Temporal-Ready"**—migrating to a distributed worker model would require minimal refactoring of the core business logic.
 
+#### Why Temporal?
+While the current ThreadPoolExecutor and SQLAlchemy state-tracking work for micro-batches, Temporal provides:
+
+#### Built-in Persistence:
+Eliminates the need for manual last_stage columns. Temporal "remembers" exactly where it stopped.
+
+#### Infinite Retries:
+If the Validation API is down for 3 hours, Temporal will sleep and retry without blocking a thread or losing the workflow state.
+
+#### Visual Debugging:
+A dedicated UI to see exactly which stage a specific reconciliation is stuck in.
 
